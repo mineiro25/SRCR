@@ -1,74 +1,47 @@
-% Declaracoes iniciaias
+%Declaracoes iniciaias
 
 :- set_prolog_flag(discontiguous_warnings,off).
 :- set_prolog_flag(single_var_warnings,off).
 
-% Definicoes iniciais
+%Definicoes iniciais
 :- op( 900,xfy,'::' ).
 :- use_module(library(lists)).
 
 :- include('cidades.pl').
 :- include('arcos.pl').
-% -------------------------------------------------------------
 
-% Link uteis : https://sicstus.sics.se/sicstus/docs/3.7.1/html/sicstus_44.html
-%              https://sicstus.sics.se/sicstus/docs/3.9.1/html/sicstus/Arithmetic.html
+%--------------- Predicados --------------------------------
 
-% ------------- Solucoes --------------------------------------
-% Termo, Predicado, Lista -> {V,F}
-solucoes(T,Q,S) :- findall(T,Q,S).
-
-% --------------- Predicados --------------------------------
-
-% Extensao do meta-predicado nao: Questao -> {V,F}
+%Extensao do meta-predicado nao
 nao( Questao ) :- Questao, !, fail.
 nao( Questao ).
 
-% Calcula o comprimento de uma lista
+%Calcula o comprimento de uma lista
 comprimento(S,N) :- length(S,N).
 
-% Predicado que da um print no terminal
+%Predicado que da um print no terminal
 imprime([]).
 imprime([X|T]) :- write(X), nl, imprime(T).
-
-% Predicado com a finalidade de adicionar elementos a uma lista
-ad_lista(X, [], [X]).
-ad_lista(X, [Y|T], [X,Y|T]) :- X @< Y, !. % um termo X precede um termo Y
-ad_lista(X, [Y|T1], [Y|T2]) :- ad_lista(X, T1, T2).
-
-% Elimina o ultimo elemento de uma lista
-remove_last([], []) :- !, fail.
-remove_last([_], []) :- !.
-remove_last([X | T], [X | T2]) :- remove_last(T, T2).
-
-
-% Extensão do predicado 'removeRepetidos' que remove os elementos repetidos duma lista
-removeRepetidos([], []).
-removeRepetidos([H|T], R) :- contains(H, T) , removeRepetidos(T, R).
-removeRepetidos([H|T], [H|R]) :- nao(contains(H, T)) , removeRepetidos(T, R).
-
-% Imprime os N primeiros valores de uma lista 
-imprime_N(0,_).
-imprime_N(_,[]).
-imprime_N(X,[H|T]) :- X>0, write(H), nl, imprime_N(X-1,T).
 
 %verifica se um elemento pertence a uma  lista
 temElem([],_).
 temElem(L,[H|T]):- member(H,L).
 temElem(L,[H|T]):- temElem(L,T);memberchk(H,L).  
 
+%Obtem um arco apartir de um id
 getArco(Origem,Destino,Dist) :- arco(Origem,Destino,Dist).
 
+%verifica se uma lista esta vazia
 estaVazia(L,V) :- comprimento(L,V),nao(V>0).
 
-% ---------------- Não Informada -----------------------------%
+%---------------- Não Informada -----------------------------%
 
-% ----------------- Querie 1 ---------------------------------%
+%----------------- Query 1 ---------------------------------%
 
 %arco(IDCidade1,IDCidade2,Distancia)
 %cidade(ID,Cidade,Lat,Long,Distrito,Ligações,Monumentos,Capital)
 
-% getCaminho(1, 209).
+%getCaminho(1, 209).
 
 
 getCaminho(Origem,Destino) :-
@@ -87,9 +60,9 @@ caminhoAux(Origem,Destino,[Proximo|Percurso],Dist,Visitados) :-
 	Dist is Dist1 + Dist2.
 
 
-% ----------------- Querie 2 ---------------------------------%
+%----------------- Query 2 ---------------------------------%
 
-% getCaracteristica(3,71,'Sim').
+%getCaracteristica(3,71,'Sim').
 
 getCaracteristica(Origem,Destino,Car) :-
 	findall((P,Dist),caracteristica(Origem,Destino,P,Car,Dist),L),
@@ -107,14 +80,15 @@ caracteristicaAux(Origem,Destino,[Proximo|Percurso],Car,Dist,Visitados) :-
 	caracteristicaAux(Proximo,Destino,Percurso,Car,Dist2,[Origem|Visitados]),
 	Dist is Dist1 + Dist2.
 
+%Obtencao das caracteristicas de uma cidade apartir do id
 getCar(Origem,Proximo,Car,Dist) :-
 	getArco(Origem,Proximo,Dist),
 	cidade(Proximo,_,_,_,_,_,_,Car,_).
 
 
-% ----------------- Querie 3 ---------------------------------%
+%----------------- Query 3 ---------------------------------%
 
-% excluiCaracteristica(1,3,['Palacio da Bolsa','Templo de Diana','Portugal dos Pequeninos'])
+%excluiCaracteristica(1,3,['Palacio da Bolsa','Templo de Diana','Portugal dos Pequeninos'])
 
 excluiCaracteristica(Origem,Destino,Monumentos) :-
 	findall((P,Dist),excluiCaminho(Origem,Destino,P,Monumentos,Dist),L),
@@ -132,13 +106,14 @@ excluiCaminhoAux(Origem,Destino,[Proximo|Percurso],Monumentos,Dist,Visitados) :-
 	excluiCaminhoAux(Proximo,Destino,Percurso,Monumentos,Dist2,[Origem|Visitados]),
 	Dist is Dist1 + Dist2.
 
+%Obtencao dos Monumentos de uma cidade apartir do id
 getNaoVai(Origem,Proximo,Monumento,Dist) :-
 	getArco(Origem,Proximo,Dist),
 	cidade(Proximo,_,_,_,_,_,Monumento,_,_).
 
-% ----------------- Querie 4 ---------------------------------%
+%----------------- Query 4 ---------------------------------%
 
-% menosLigacoes(182,94).
+%menosLigacoes(182,94).
 
 menosLigacoes(Origem,Destino) :-
 	findall((Menor,P),menor(Origem,Destino,P,_,Menor),L),
@@ -158,17 +133,19 @@ menorAux(Origem,Destino, [Proximo|Percurso],Dist,Menor,Visitados) :-
 	Dist is Dist1 + Dist2,
 	append([Menor1],Menor2,Menor).
 
+%Calculo do numero ligacoes
 nrLig(Id,(Id,L)) :-
 	findall(X,getArco(Id,_,_),Z),
 	comprimento(Z,L).
 
+%Obtencao de um destino e calculo de ligacoes desse destino
 cidadeVizinha(Origem,Proximo,Dist,Menor) :-
 	getArco(Origem,Proximo,Dist),
 	nrLig(Proximo,Menor).
 
-% ----------------- Querie 5 ---------------------------------%
+%----------------- Query 5 ---------------------------------%
 
-% caminhoCurto(94,102).
+%caminhoCurto(94,102).
 
 caminhoCurto(Origem,Destino) :-
 	findall((P,Dist),caminho(Origem,Destino,Dist,P),C),
@@ -177,10 +154,12 @@ caminhoCurto(Origem,Destino) :-
 	filtroListas(D,E,U),
 	imprime(U).
 
+%Calculo do menores de uma lista de listas
 minimoListas([((A,_),_)],A).
 minimoListas([((A,_),_)|L],B):- minimoListas(L,B), B =< A.
 minimoListas([((A,_),_)|L],A):- minimoListas(L,B), A < B.
 
+%Elemina as listas que nao tenham valor igual ao calculado
 filtroListas([],_,[]).
 filtroListas([((X,_),_)|Y],Min,R) :-
     Min \== X ,
@@ -190,15 +169,16 @@ filtroListas([((X,A),B)|Y],Min,K) :-
     filtroListas(Y,Min,R),
     append([((X,A),B)],R,K).
 
+%Calculo do numero de cidades de um percurso
 tamanhoListaLig([],[]).
 tamanhoListaLig([(H,T)],[((X,H),T)]) :- comprimento(H,X).
 tamanhoListaLig([(H,T)|Z],[((X,H),T)|Y]) :- comprimento(H,X),tamanhoListaLig(Z,Y).
 
 
 
-% ----------------- Querie 6 ---------------------------------%
+%----------------- Query 6 ---------------------------------%
 
-% maisRapido(103,119).
+%maisRapido(103,119).
 
 maisRapido(Origem,Destino) :-
 	findall((P,Dist),caminho(Origem,Destino,Dist,P),C),
@@ -206,12 +186,14 @@ maisRapido(Origem,Destino) :-
 	filtroDist(C,Dist,L),
 	imprime(L).
 
+%Procura qual os percursos com distancia minima
 mininoDist([(_,H)],H) :- !,true.
 mininoDist([(_,H)|T], M) :- 
 	mininoDist(T, M), M =< H.
 mininoDist([(_,H)|T], H):-
     mininoDist(T, M), H <  M.
 
+%Elemina os percursos que nao tenham a distancia minima
 filtroDist([],_,[]).
 filtroDist([(_,D)|T],Min,R) :-
     Min \== D,
@@ -221,9 +203,9 @@ filtroDist([(X,D)|T],Min,K) :-
     filtroDist(T,Min,R),
     append([(X,D)],R,K).
 
-% ----------------- Querie 7 ---------------------------------%
+%----------------- Query 7 ---------------------------------%
 
-% getAdmin(22,32).
+%getAdmin(22,32).
 
 getAdmin(Origem,Destino) :-
 	findall((P,Dist),municipio(Origem,Destino,P,Dist,'admin'),L),
@@ -241,14 +223,15 @@ municipioAux(Origem,Destino,[Proximo|Percurso],Dist,'admin',Visitados) :-
 	municipioAux(Proximo,Destino,Percurso,Dist2,'admin',[Origem|Visitados]),
 	Dist is (Dist1 + Dist2).
 
-% ----------------- Querie 8 ---------------------------------%
+%----------------- Query 8 ---------------------------------%
 
-% caminhosEntre(26,40,[22,3,32])
+%caminhosEntre(26,40,[22,3,32])
 
 caminhosEntre(Origem,Destino,Intermedios) :-
 	findall((P,Dist),caminho(Origem,Destino,Dist,P),L),
 	check(L,Intermedios,R).
 
+%Filtra os Percursos que cumprem com o itenerario
 check([],_,[]).
 check([(X,_)|T],L,R) :- check(T,L,R), \+temTodos(L,X).                              
 check([(X,D)|T],L,R) :- check(T,L,K), temTodos(L,X), append([(X,D)],K,R),imprime(R).  
@@ -257,9 +240,79 @@ check([(X,D)|T],L,R) :- check(T,L,K), temTodos(L,X), append([(X,D)],K,R),imprime
 temTodos([],_).
 temTodos([H|T],L) :- member(H,L),temTodos(T,L).
 
-% ---------------- Informada -----------------------------%
 
-% ----------------- Querie 1/6 ---------------------------------%
+%----------------- Query Extra ---------------------------------%
+
+%maisMonumentos(3,32,3).
+
+maisMonumentos(Origem,Destino,NumeroMon) :-
+	findall(((P,N),Dist),maisMon(Origem,Destino,P,Dist,NumeroMon,N),L),
+	imprime(L).
+
+maisMon(Origem,Destino,[Origem|Percurso],Dist,NumeroMon,N):-
+	maisMonAux(Origem,Destino,Percurso,Dist,NumeroMon,N,[]).
+
+maisMonAux(Destino,Destino,[],0,_,_,_).
+maisMonAux(Origem,Destino,[Proximo|Percurso],Dist,NumeroMon,N,Visitados) :-
+	Origem \= Destino,
+	getNumMon(Origem,Proximo,N,Dist1),
+	NumeroMon =< N,
+	\+member(Proximo,Visitados),
+	maisMonAux(Proximo,Destino,Percurso,Dist2,NumeroMon,N1,[Origem|Visitados]),
+	Dist is Dist1 + Dist2.
+
+%Calcula o numero de Monumentos de uma cidade
+getNumMon(Origem,Proximo,N,Dist) :- 
+	getArco(Origem,Proximo,Dist),
+	cidade(Proximo,_,_,_,_,_,Monumento,_,'admin'),
+	comprimento(Monumento,N).
+	
+
+%---------------- Informada -----------------------------%
+
+%----------------- Query 1/6 ---------------------------------%
+
+usaAestrela(Origem,Destino,Percurso/Custo) :-
+	distance(Origem,Destino,X),
+	aEstrela([[(Origem,Destino)]/0/X], PercursoInv/Custo/_),
+	reverseL(PercursoInv,Percurso).
+
+aEstrela(Percursos,Percurso) :-
+	temMelhor(Percursos,Percurso),
+	Percurso = [(Cidade,Destino)|_]/_/_,
+	Cidade == Destino.
+aEstrela(Percursos,Solucao) :-
+	temMelhor(Percursos,MelhorPercurso),
+	escolhe(MelhorPercurso,Percursos,OutrosC),
+	aEstrelaExtendida(MelhorPercurso,PercursosExt),
+	append(OutrosC,PercursosExt,NovosC),
+	aEstrela(NovosC,Solucao).
+
+temMelhor([Percurso],Percurso) :- !.
+temMelhor([Percurso1/Custo1/Estimativa1,_/Custo2/Estimativa2|Percursos],MelhorPercurso) :-
+	(Custo1 + Estimativa1) =< (Custo2 + Estimativa2), !,
+	temMelhor([Percurso1/Custo1/Estimativa1|Percursos],MelhorPercurso).
+temMelhor([_|Percursos],MelhorPercurso) :-
+	temMelhor(Percursos,MelhorPercurso).
+
+aEstrelaExtendida(Percurso,PercursosExt) :-
+	findall(NovosC, arcoAdj(Percurso,NovosC), PercursosExt).
+
+arcoAdj([(Cidade,Destino)|Percurso]/Custo/_, [(Proximo,Destino),(Cidade,Destino)|Percurso]/NCusto/Estimativa) :-
+	getArco(Cidade,Proximo,ProximoCusto),
+	\+member(Proximo,Percurso),
+	
+	distance(Proximo,Destino,Estimativa),
+	NCusto is Custo + ProximoCusto.
+
+% Tira o elemen D de uma lista
+escolhe(D, [D|Ds], Ds).
+escolhe(D, [D|Ds], [D|Es]) :- escolhe(D,Ds,Es).
+
+% reverte uma lista
+reverseL(Ds,Es) :- reverseL(Ds, [], Es).
+reverseL([],Ds,Ds).
+reverseL([D|Ds],Es,Fs) :- reverseL(Ds, [D|Es], Fs).
 
 getCoord(Id,Lat,Long) :- cidade(Id,_,Lat,Long,_,_,_,_,_).
 
@@ -267,44 +320,6 @@ distance(Origem,Destino,C) :-
 	getCoord(Origem,LatO,LongO),
 	getCoord(Destino,LatD,LongD),
 	C is sqrt((LatD-LatO)^2 + (LongD-LongO)^2).
-
-
-melhor([Percurso],Percurso) :- !.
-melhor([Percurso1/Custo1/Estimativa1,_/Custo2/Estimativa2|Percursos],MelhorPercurso) :-
-	Custo1 + Estimativa1 =< Custo2 + Estimativa2,
-	!,
-	melhor([Percurso1/Custo1/Estimativa1|Percursos], MelhorPercurso).
-melhor([_|Percursos],MelhorPercurso) :-
-	melhor(Percursos,MelhorPercurso).
-
-
-usaAestrela(Origem,Destino,Percurso/Custo) :-
-	distance(Origem,Destino,C),
-	aEstrela([[(Origem,Destino)]/0/C],PercursoInv/Custo/_),
-	reverse(PercursoInv,Percurso).
-
-aEstrela(Percursos,Percurso) :-
-	melhor(Percursos,Percurso),
-	Percurso = [(Proximo,Destino)|_]/_/_,
-	Proximo == Destino.
-aEstrela(Percursos,SolPercurso) :-
-	melhor(Percursos,MelhorPercurso),
-	select(MelhorPercurso,Percursos,MaisPercursos),
-	aEstrelaExtendida(MelhorPercurso,PercursosExt),
-	append(MaisPercursos,PercursosExt,PercursosNovos),
-	aEstrela(PercursosNovos,Percurso).
-
-aEstrelaExtendida(Percursos,PercursosExt) :-
-	findall(PercursosNovos, arcoAestrela(Percurso,PercursosNovos),PercursosExt).
-
-arcoAestrela([(Proximo,Destino)|Percurso]/Custo/_,[(Proximo2,Destino),(Proximo,Destino)|Percurso]/Custo2/Estimativa) :-
-	getArco(Proximo,Proximo2,Dist),
-	\+member(Proximo2,Percurso),
-	Custo2 is Custo + Dist,
-	distance(Proximo2,Destino,Estimativa).
-
-
-
 
 
 

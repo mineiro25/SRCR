@@ -11,54 +11,46 @@ dataset['capital'] = dataset['capital'].str.normalize('NFKD').str.encode('ascii'
 
 #Dictionary with the connections between districts
 dist_dict = {
-    'Braga' : ['Porto','Viana do Castelo', 'Vila Real'],
+    'Braga' : ['Porto','Viana do Castelo','Vila Real'],
     'Viana do Castelo' : ['Braga'],
-    'Porto' : ['Braga', 'Vila Real', 'Aveiro', 'Viseu'],
-    'Vila Real' : ['Porto', 'Braga', 'Braganca', 'Viseu'],
-    'Braganca' : ['Vila Real', 'Guarda', 'Viseu'],
+    'Porto' : ['Braga','Vila Real','Aveiro','Viseu'],
+    'Vila Real' : ['Porto','Braga','Braganca','Viseu'],
+    'Braganca' : ['Vila Real','Guarda','Viseu'],
     'Aveiro' : ['Viseu','Porto','Coimbra'],
-    'Viseu' : ['Aveiro', 'Porto', 'Vila Real', 'Guarda', 'Braganca', 'Coimbra'],
-    'Guarda' : ['Braganca', 'Castelo Branco', 'Viseu', 'Coimbra'],
-    'Coimbra' : ['Aveiro', 'Viseu', 'Leiria', 'Castelo Branco', 'Guarda'],
-    'Castelo Branco' : ['Guarda', 'Coimbra', 'Leiria', 'Santarem', 'Portalegre'],
-    'Leiria' : ['Coimbra', 'Castelo Branco', 'Santarem', 'Lisboa'],
-    'Santarem' : ['Leiria', 'Lisboa', 'Setubal', 'Portalegre', 'Evora', 'Castelo Branco'],
-    'Portalegre' : ['Castelo Branco', 'Santarem', 'Evora'],
-    'Lisboa' : ['Leiria', 'Santarem', 'Setubal'],
-    'Setubal' : ['Evora', 'Beja', 'Santarem', 'Lisboa'],
-    'Evora' : ['Setubal', 'Santarem', 'Portalegre', 'Beja'],
-    'Beja' : ['Setubal', 'Evora', 'Faro'],
+    'Viseu' : ['Aveiro','Porto','Vila Real','Guarda','Braganca','Coimbra'],
+    'Guarda' : ['Braganca','Castelo Branco','Viseu','Coimbra'],
+    'Coimbra' : ['Aveiro','Viseu','Leiria','Castelo Branco','Guarda'],
+    'Castelo Branco' : ['Guarda','Coimbra','Leiria','Santarem','Portalegre'],
+    'Leiria' : ['Coimbra','Castelo Branco','Santarem','Lisboa'],
+    'Santarem' : ['Leiria','Lisboa','Setubal','Portalegre','Evora','Castelo Branco'],
+    'Portalegre' : ['Castelo Branco','Santarem','Evora'],
+    'Lisboa' : ['Leiria','Santarem','Setubal'],
+    'Setubal' : ['Evora','Beja','Santarem','Lisboa'],
+    'Evora' : ['Setubal','Santarem','Portalegre','Beja'],
+    'Beja' : ['Setubal','Evora','Faro'],
     'Faro' : ['Beja']
 }
 
 #Dictionary with the connections between districts and famous monuments
 mon_dict = {
-    'Braga' : ['Bom Jesus do Monte' , 'Santuario da Nossa Senhora do Sameiro'],
-    'Vila do Conde' : ['Aqueduto de Santa Clara'],
-    'Sagres' : ['Rosa dos Ventos'],
-    'Povoa de Varzim' : ['Cividade de Terroso'],
-    'Evora' : ['Cromleque dos Almendres' , 'Templo de Diana', 'Convento dos Loios', 'Mosteiro dos Ossos'],
-    'Faro' : ['Arco da Vila'],
-    'Porto' : ['Cemiterio de Agramonte' , 'Monumento aos Herois da Guerra Peninsular','Palacio da Bolsa','Torre dos Clerigos'],
-    'Lisboa' : ['Cristo Rei' , 'Arco Triunfal da Rua Augusta' , 'Torre de Belem' , 'Padrao dos Descobrimentos', 'Panteao Nacional', 'Monumento aos Combatentes do Ultramar', 'Mosteiro dos Jeronimos'],
-    'Sintra' : ['Palacio da Pena','Quinta da Regaleira','Palacio de Monserrate'],
-    'Batalha' : ['Mosteiro da Batalha'],
-    'Alcobaca' : ['Mosteiro de Alcobaca'],
-    'Guarda' : ['Se da Guarda'],
-    'Chaves' : ['Ponte romana de Trajano'],
-    'Ovar' : ['Igreja Paroquial de valega'],
-    'Vieira do Minho' : ['Ponte da Mizarela'],
-    'Mealhada' : ['Palacio do Bucaco'],
-    'Tomar' : ['Convento de Cristo'],
-    'Moncao' : ['Palacio da Brejoeira'],
-    'Viana do Castelo' : ['Santa Luzia'],
-    'Guimaraes' : ['Castelo Guimaraes','Paco dos duques'],
-    'Obidos' : ['Castelo Obidos'],
-    'Mafra' : ['Convento de Mafra'],
-    'Coimbra' : ['Portugal dos Pequeninos'],
-    'Fatima' : ['Santuario de Fatima'],
-    'Almada' : ['Cristo Rei'],
-    'Faro' : ['Ruinas de Milreu']
+    'Braga' : ['Bom Jesus do Monte','Santuario da Nossa Senhora do Sameiro','Mosteiro Tibaes','Ponte da Mizarela','Castelo Guimaraes','Paco dos duques'],
+    'Evora' : ['Cromleque dos Almendres','Templo de Diana','Convento dos Loios','Mosteiro dos Ossos'],
+    'Faro' : ['Arco da Vila','Ruinas de Milreu','Palacio de Estoi','Rosa dos Ventos','Castelo de Silves'],
+    'Porto' : ['Cemiterio de Agramonte','Monumento aos Herois da Guerra Peninsular','Palacio da Bolsa','Torre dos Clerigos','Aqueduto de Santa Clara','Igreja de Sao Goncalo'],
+    'Lisboa' : ['Cristo Rei','Arco Triunfal da Rua Augusta','Torre de Belem','Padrao dos Descobrimentos','Panteao Nacional','Monumento aos Combatentes do Ultramar','Mosteiro dos Jeronimos','Palacio da Pena','Quinta da Regaleira','Palacio de Monserrate','Palacio Queluz','Convento de Mafra'],
+    'Guarda' : ['Se da Guarda','Fortaleza de Almeida','Castelo de Sabugal','Castelo de Trancoso','Castelo de Folgosinho'],
+    'Viana do Castelo' : ['Santa Luzia','Santuario de Nossa Senhora da Peneda','Ponte de Ponte Lima','Espigueiros de Soajo','Ponte Medieval de Vilar de Mouros','Palacio da Brejoeira'],
+    'Coimbra' : ['Portugal dos Pequeninos','Biblioteca Joanina da Universidade de Coimbra','Mosteiro de Santa Clara-a-Velha'],
+    'Santarem' : ['Castelo de Almourol','Castelo de Ourem','Castelo Templario de Tomar','Convento de Cristo','Aqueduto dos Pegoes','Santuario de Fatima'],
+    'Viseu' : ['Catedral de Viseu','Mosteiro de Sao Joao de Tarouca','Castelo de Penedono','Ruinas do Castelo de Sernacelhe','Santuario nossa Senhora dos Remedios','Castelo de Lamego','Catedral de Lamego'],
+    'Beja' : ['Convento da Nossa Senhora da Conceicao','Castelo de Mertola','Castelo de Noudar','Castelo de Beja','Castelo de Serpa','Pulo do Lobo'],
+    'Portalegre' : ['Castelo de Portalegre','Torre de Atalaiao','Castelo de Alegrete','Forte da Graca'],
+    'Castelo Branco' : ['Santuario de Nossa Senhora de Almortao','Castelo de Castelo Branco','Castelo de Monsanto','Castelo de Penha','Ruinas Romanas de Centum Cellas','Castelo de Belmonte'],
+    'Setubal' : ['Santuario de Nossa Senhora do Cabo','Ruinas Romanas de Mirobriga','Igreja Convento de Jesus Setubal','Convento da Nossa Senhora da Arrabida'],
+    'Leiria' : ['Grutas de Santo Antonio','Grutas de Mira de Aire','Grutas de Alvados','Grutas da Moeda','Mosteiro da Batalha','Mosteiro de Alcobaca','Castelo Obidos'],
+    'Vila Real' : ['Igreja Matriz Alijo','Palacio Mateus','Igreja Nossa Senhora Guadalupe','Pelourinho de Vila Real','Parque Natural do Alvao','Ponte romana de Trajano'],
+    'Braganca' : ['Castelo de Braganca','Gravuras Rupestres de Mazouco','Ponte Medieval de Mirandela','Castelo de Miranda do Douro'],
+    'Aveiro' : ['Salinas de Aveiro','Convento de Arouca','Castelo de Santa Maria da Feira','Igreja Paroquial de valega','Palacio do Bucaco']
 }
 
 #Wtite complete dataset
@@ -67,8 +59,6 @@ full.write('%%cidade(ID,Cidade,Lat,Long,Distrito,Ligacões,Monumentos,temMonumen
 for line in dataset.values:
     if (line[1] in mon_dict):
         full.write("cidade(%d,'%s',%f,%f,'%s',%s,%s,'Sim','%s').\n" %(line[0],line[1],line[2],line[3],line[4],dist_dict[line[4]],mon_dict[line[1]],line[5]))
-    elif (line[4] in mon_dict):
-        full.write("cidade(%d,'%s',%f,%f,'%s',%s,%s,'Sim','%s').\n" %(line[0],line[1],line[2],line[3],line[4],dist_dict[line[4]],mon_dict[line[4]],line[5]))
     else:
         full.write("cidade(%d,'%s',%f,%f,'%s',%s,[],'Nao','%s').\n" %(line[0],line[1],line[2],line[3],line[4],dist_dict[line[4]],line[5]))
 full.close()
