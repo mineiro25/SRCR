@@ -113,25 +113,25 @@ getNaoVai(Origem,Proximo,Monumento,Dist) :-
 
 %----------------- Query 4 ---------------------------------%
 
-%menosLigacoes(182,94).
+%maisLigacoes(182,94).
 
-menosLigacoes(Origem,Destino) :-
-	findall((Menor,P),menor(Origem,Destino,P,_,Menor),L),
+maisLigacoes(Origem,Destino) :-
+	findall((Maior,P),mais(Origem,Destino,P,_,Maior),L),
 	imprime(L).
 
-menor(Origem,Destino,[Origem|Percurso],Dist,M) :-
+mais(Origem,Destino,[Origem|Percurso],Dist,M) :-
 	nrLig(Origem,C),
-	menorAux(Origem,Destino,Percurso,Dist,Menor,[]),
-	append([C],Menor,M).
+	maisAux(Origem,Destino,Percurso,Dist,Maior,[]),
+	append([C],Maior,M).
 
-menorAux(Destino,Destino,[],0,[],_).
-menorAux(Origem,Destino, [Proximo|Percurso],Dist,Menor,Visitados) :-
+maisAux(Destino,Destino,[],0,[],_).
+maisAux(Origem,Destino, [Proximo|Percurso],Dist,Maior,Visitados) :-
 	Origem \= Destino,
-	cidadeVizinha(Origem,Proximo,Dist1,Menor1),
+	cidadeVizinha(Origem,Proximo,Dist1,Maior1),
 	\+member(Proximo,Visitados),
-	menorAux(Proximo,Destino,Percurso,Dist2,Menor2,[Origem|Visitados]),
+	maisAux(Proximo,Destino,Percurso,Dist2,Maior2,[Origem|Visitados]),
 	Dist is Dist1 + Dist2,
-	append([Menor1],Menor2,Menor).
+	append([Maior1],Maior2,Maior).
 
 %Calculo do numero ligacoes
 nrLig(Id,(Id,L)) :-
@@ -139,9 +139,9 @@ nrLig(Id,(Id,L)) :-
 	comprimento(Z,L).
 
 %Obtencao de um destino e calculo de ligacoes desse destino
-cidadeVizinha(Origem,Proximo,Dist,Menor) :-
+cidadeVizinha(Origem,Proximo,Dist,Maior) :-
 	getArco(Origem,Proximo,Dist),
-	nrLig(Proximo,Menor).
+	nrLig(Proximo,Maior).
 
 %----------------- Query 5 ---------------------------------%
 
